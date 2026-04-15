@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @SpringBootApplication
 // Dove Scansionare i diversi: bean, repositery e le diverse entity
 @ComponentScan(basePackages = { "com.book.crud", "com.book.crud.controller", "com.book.crud.services", "com.book.crud.mapper" })
-@EnableJpaRepositories(basePackages = { "com.book.crud.repository" })
+@EnableJpaRepositories
 public class CrudApplication {
 
 	public static void main(String[] args) {
