@@ -8,7 +8,7 @@ import java.util.List;
 
 // Creazione della Entità "Book" da usare con JPA con il DB
 @Entity
-@Table(name = "libri", schema = "privato", catalog = "book-api-dispence")
+@Table(name = "libri")
 public class BookModel implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
