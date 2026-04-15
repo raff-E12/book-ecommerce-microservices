@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
-@Table(name = "ordini")
+@Table(name = "ordini",  schema = "privato", catalog = "book-api-dispence")
 public class OrdineModel implements Serializable {
 
     @Id
