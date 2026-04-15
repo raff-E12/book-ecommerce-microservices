@@ -1,0 +1,55 @@
+-- ┌─────────────────────────────────────────────────────────┐
+--  DML — Dati di esempio
+-- └─────────────────────────────────────────────────────────┘
+ 
+-- ──────────────────────────────────────────────
+--  INSERT — LIBRI  (12 record)
+-- ──────────────────────────────────────────────
+INSERT INTO libri (titolo, autore, editore, anno_pubblicazione, isbn, categoria, num_copie, disponibile, posizione_scaffale, note, prezzo) VALUES
+('Il Nome della Rosa',                 'Umberto Eco',              'Bompiani',    1980, '9788845292613', 'Narrativa',    10,  8, 'A1-01', 'Romanzo storico medievale',            14.99),
+('Se questo e un uomo',                'Primo Levi',               'Einaudi',     1947, '9788806182728', 'Saggistica',    8,  5, 'B2-03', 'Testimonianza della Shoah',             12.50),
+('La Coscienza di Zeno',               'Italo Svevo',              'Mondadori',   1923, '9788804667032', 'Narrativa',     6,  6, 'A1-04', 'Romanzo modernista italiano',           11.00),
+('I Promessi Sposi',                   'Alessandro Manzoni',       'Einaudi',     1840, '9788806225384', 'Classici',     15, 12, 'C3-01', 'Capolavoro della letteratura italiana', 10.90),
+('Cent anni di solitudine',            'Gabriel Garcia Marquez',   'Mondadori',   1967, '9788804667001', 'Narrativa',     7,  4, 'A2-02', 'Realismo magico latinoamericano',       13.50),
+('1984',                               'George Orwell',            'Mondadori',   1949, '9788804668243', 'Fantascienza',  9,  7, 'D1-05', 'Distopia classica',                     12.00),
+('Il Processo',                        'Franz Kafka',              'Feltrinelli', 1925, '9788807901317', 'Classici',      5,  3, 'C2-07', 'Romanzo kafkiano per eccellenza',       10.00),
+('La Divina Commedia',                 'Dante Alighieri',          'Einaudi',     1320, '9788806226015', 'Poesia',       20, 18, 'E1-01', 'Edizione integrale con commento',       18.00),
+('Harry Potter e la Pietra Filosofale','J.K. Rowling',             'Salani',      1997, '9788867158355', 'Fantasy',      12, 10, 'F2-01', 'Primo volume della saga',               15.90),
+('Il Signore degli Anelli',            'J.R.R. Tolkien',           'Bompiani',    1954, '9788845292624', 'Fantasy',       8,  6, 'F2-03', 'Edizione unica trilogia',               24.90),
+('Sapiens',                            'Yuval Noah Harari',        'Bompiani',    2011, '9788845274398', 'Saggistica',    6,  5, 'B3-02', 'Breve storia dell umanita',             16.00),
+('Il Piccolo Principe',                'Antoine de Saint-Exupery', 'Bompiani',    1943, '9788845292637', 'Classici',     25, 22, 'C1-01', 'Favola filosofica universale',           9.90);
+ 
+ 
+-- ──────────────────────────────────────────────
+--  INSERT — ORDINI  (10 record)
+-- ──────────────────────────────────────────────
+INSERT INTO ordini (prezzo_totale, ordinato) VALUES
+(27.49,  true),   -- id 1
+(24.90,  true),   -- id 2
+(45.90,  true),   -- id 3
+(14.99,  false),  -- id 4
+(40.00,  true),   -- id 5
+(25.80,  false),  -- id 6
+(24.50,  true),   -- id 7
+(43.70,  true),   -- id 8
+(18.00,  false),  -- id 9
+(47.80,  true);   -- id 10
+ 
+ 
+-- ──────────────────────────────────────────────
+--  INSERT — CHECKOUT  (12 record)
+--  prezzo_subtotale = libro_prezzo * quantita
+-- ──────────────────────────────────────────────
+INSERT INTO checkout (ordine_id, libro_id, libro_prezzo, quantita, prezzo_subtotale) VALUES
+(1,   1, 14.99, 1,  14.99),  -- ordine 1: Il Nome della Rosa x1
+(1,   2, 12.50, 1,  12.50),  -- ordine 1: Se questo e un uomo x1
+(2,  10, 24.90, 1,  24.90),  -- ordine 2: Il Signore degli Anelli x1
+(3,   8, 18.00, 2,  36.00),  -- ordine 3: La Divina Commedia x2
+(3,  12,  9.90, 1,   9.90),  -- ordine 3: Il Piccolo Principe x1
+(4,   1, 14.99, 1,  14.99),  -- ordine 4: Il Nome della Rosa x1 (non confermato)
+(5,   6, 12.00, 2,  24.00),  -- ordine 5: 1984 x2
+(5,  11, 16.00, 1,  16.00),  -- ordine 5: Sapiens x1
+(6,   9, 15.90, 1,  15.90),  -- ordine 6: Harry Potter x1
+(6,  12,  9.90, 1,   9.90),  -- ordine 6: Il Piccolo Principe x1
+(7,   3, 11.00, 1,  11.00),  -- ordine 7: La Coscienza di Zeno x1
+(7,   5, 13.50, 1,  13.50);  -- ordine 7: Cent anni di solitudine x1

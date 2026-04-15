@@ -1,0 +1,47 @@
+package com.student.orders.repository;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import com.student.orders.dto.Checkout;
+import com.student.orders.model.CheckOutModel;
+
+import jakarta.transaction.Transactional;
+
+@Repository
+public interface CheckRepository extends JpaRepository<CheckOutModel, Integer> {
+
+    @Query(value = """
+        SELECT 
+            c.id,
+            l.titolo as BookName,
+            c.ordine_id as OderId,
+            c.libro_prezzo as Price,
+            c.quantita as Quantity,
+            c.prezzo_subtotale as SubTotal
+        FROM privato.checkout c
+        INNER JOIN privato.libri l ON c.libro_id = l.id
+        WHERE c.ordine_id = :ordineId
+        """, nativeQuery = true)
+    List<Checkout> findAllConTitolo(@Param("ordineId") Integer ordineId); 
+   
+    @Modifying
+    @Transactional
+    @Query(value = "DELETE FROM privato.checkout WHERE ordine_id = :ordineId", nativeQuery = true)
+    void deleteByOrdineId(@Param("ordineId") int ordineId);
+
+    @Query(value = "SELECT * FROM privato.checkout WHERE ordine_id = :ordineId", nativeQuery = true)
+    List<CheckOutModel> findByOrdineId(@Param("ordineId") int ordineId);
+
+    @Query(value = "SELECT * FROM privato.checkout WHERE libro_id = :id", nativeQuery = true)
+    CheckOutModel findByIdBook(@Param("id") int id);
+
+    @Query("SELECT MAX(c.id) FROM CheckOutModel c")
+    Integer findMaxId();
+    
+}
