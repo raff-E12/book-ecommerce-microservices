@@ -40,12 +40,12 @@ public class OrdersServices {
     @Autowired
     private MappersGlobals mappersGlobal;
 
-    public List<Checkout> getAllOrders(Integer ordineId) {
+    public List<Checkout> getAllOrders(int ordineId) {
         List<Checkout> checkList = checkRepository.findAllConTitolo(ordineId);
         return checkList;
     }
 
-    public boolean deleteProd(Integer id) {
+    public boolean deleteProd(int id) {
         if (checkRepository.existsById(id)) {
             checkRepository.deleteById(id);
             return true;

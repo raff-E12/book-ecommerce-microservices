@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,7 +30,7 @@ public class ProvaController {
 	}
 	
 	@GetMapping("/db-test/{id}")
-	public ResponseEntity<List<Checkout>> FindAll(@RequestParam Integer id){
+	public ResponseEntity<List<Checkout>> FindAll(@PathVariable int id){
         return new ResponseEntity<>(services.getAllOrders(id), HttpStatus.OK);
 	}
 

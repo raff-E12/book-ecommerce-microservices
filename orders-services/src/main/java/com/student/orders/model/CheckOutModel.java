@@ -30,7 +30,7 @@ import jakarta.persistence.UniqueConstraint;
             columnNames = { "ordine_id", "libro_id" }
         )
     },
-    schema = "privato", 
+    schema = "public", 
     catalog = "book-api-dispence"
 )
 public class CheckOutModel implements Serializable {
