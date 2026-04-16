@@ -15,7 +15,8 @@ import java.math.BigDecimal;
             name = "uq_checkout_ordine_libro",
             columnNames = { "ordine_id", "libro_id" }
         )
-    } 
+    } ,
+    schema = "public"
 )
 public class CheckoutModel implements Serializable {
 
