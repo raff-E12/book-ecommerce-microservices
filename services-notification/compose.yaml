@@ -15,8 +15,6 @@ services:
     networks:
       - microservices-net
 
-  # NOTA: Kafka moderno (KRaft) non avrebbe bisogno di Zookeeper, 
-  # ma visto che lo hai incluso, manteniamo una configurazione compatibile.
   zookeeper:
     image: confluentinc/cp-zookeeper:7.4.0
     container_name: zookeeper

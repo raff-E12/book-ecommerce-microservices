@@ -11,7 +11,7 @@ import com.notification.services.events.OrderFeedback;
 import com.notification.services.service.ProcessOrder;
 
 @Component
-// Cattura l'evento da oder-services
+// Cattura l'evento da order-services segnato da un gruppo di riferimento su qui i vari topic vengono creati.
 @KafkaListener(topics = "orders", groupId = "notification-group")
 public class Notifications {
 
