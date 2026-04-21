@@ -11,7 +11,7 @@ import com.notification.services.events.OrderCheck;
 import com.notification.services.events.OrderCreated;
 import com.notification.services.events.OrderFeedback;
 
-// Estrare l'evento da essere usato come log.
+// Estrare l'evento da essere usato come log, poi ai vari topic.
 @Service
 public class ProcessOrder {
     
