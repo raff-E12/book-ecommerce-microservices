@@ -20,25 +20,25 @@ public interface CheckRepository extends JpaRepository<CheckOutModel, Integer> {
         SELECT 
             c.id,
             l.titolo as BookName,
-            c.ordine_id as OderId,
+            c.ordine_id as OrderId,
             c.libro_prezzo as Price,
             c.quantita as Quantity,
             c.prezzo_subtotale as SubTotal
-        FROM privato.checkout c
-        INNER JOIN privato.libri l ON c.libro_id = l.id
+        FROM public.checkout c
+        INNER JOIN public.libri l ON c.libro_id = l.id
         WHERE c.ordine_id = :ordineId
         """, nativeQuery = true)
-    List<Checkout> findAllConTitolo(@Param("ordineId") Integer ordineId); 
+    List<Object[]> findAllConTitolo(@Param("ordineId") int ordineId); 
    
     @Modifying
     @Transactional
-    @Query(value = "DELETE FROM privato.checkout WHERE ordine_id = :ordineId", nativeQuery = true)
+    @Query(value = "DELETE FROM public.checkout WHERE ordine_id = :ordineId", nativeQuery = true)
     void deleteByOrdineId(@Param("ordineId") int ordineId);
 
-    @Query(value = "SELECT * FROM privato.checkout WHERE ordine_id = :ordineId", nativeQuery = true)
+    @Query(value = "SELECT * FROM public.checkout WHERE ordine_id = :ordineId", nativeQuery = true)
     List<CheckOutModel> findByOrdineId(@Param("ordineId") int ordineId);
 
-    @Query(value = "SELECT * FROM privato.checkout WHERE libro_id = :id", nativeQuery = true)
+    @Query(value = "SELECT * FROM public.checkout WHERE libro_id = :id", nativeQuery = true)
     CheckOutModel findByIdBook(@Param("id") int id);
 
     @Query("SELECT MAX(c.id) FROM CheckOutModel c")

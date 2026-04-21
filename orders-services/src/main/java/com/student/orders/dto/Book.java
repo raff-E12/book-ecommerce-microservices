@@ -3,7 +3,6 @@ package com.student.orders.dto;
 import java.math.BigDecimal;
 
 public record Book(
-    
     Integer id,
     String titolo,
     String autore,

@@ -2,7 +2,6 @@ package com.book.crud.services;
 
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.book.crud.repository.*;
@@ -20,7 +19,7 @@ public class BookServices {
     private BookMapper bookMapper;
 
     public List<Book> ListBookAll(){
-        List<BookModel> BooksList = books.findAll();
+        List<BookModel> BooksList = books.findAllNative();
         return bookMapper.toDtoList(BooksList);
     }
 

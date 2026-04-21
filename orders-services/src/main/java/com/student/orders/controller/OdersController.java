@@ -4,18 +4,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.student.orders.components.OrderKafka;
 import com.student.orders.dto.Checkout;
 import com.student.orders.errors.IllegalResponseException;
 import com.student.orders.errors.ResourceNotFoundException;
+import com.student.orders.events.OrderCheck;
 import com.student.orders.global.CreateOrder;
+import com.student.orders.global.interfaces.CheckOutQuery;
 import com.student.orders.model.OrdersModel;
 import com.student.orders.services.OrdersServices;
 
+import io.github.resilience4j.ratelimiter.RequestNotPermitted;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,13 +35,21 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
 
-
 @RestController
 @RequestMapping("/api")
+@RefreshScope
+@RateLimiter(name ="OrderEndpoint", fallbackMethod = "FallBackOrder")
 public class OdersController {
     
     @Autowired
     private OrdersServices ordersServices;
+
+    public ResponseEntity<HashMap<String, Object>> FallBackOrder(RequestNotPermitted ex) {
+        HashMap<String, Object> maps = new HashMap<>();
+        maps.put("message", "Troppe richieste, riprova tra poco");
+        maps.put("status", HttpStatus.TOO_MANY_REQUESTS.value());
+        return new ResponseEntity<>(maps, HttpStatus.TOO_MANY_REQUESTS);
+    }
 
     @GetMapping("/orders/{id}")
     public ResponseEntity<HashMap<String, Object>> getMethodName(@PathVariable int id) {
@@ -110,7 +127,7 @@ public class OdersController {
         
         if (!response.get("orderCompleted")) {
              throw new ResourceNotFoundException("L'Ordine è stato gia completato");
-        }  
+        }
 
         maps.put("message", "Ordine completato con successo");
         maps.put("feedback", response);

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,14 +21,20 @@ import com.book.crud.errors.DataInsertException;
 import com.book.crud.errors.InvalidDateException;
 import com.book.crud.errors.ResourceNotFoundException;
 import com.book.crud.mapper.BookMapper;
-import com.book.crud.model.BookModel;
+import com.book.crud.model.*;
 import com.book.crud.services.BookServices;
+
+import io.github.resilience4j.ratelimiter.RequestNotPermitted;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
 @RequestMapping("/api")
+@RefreshScope
+@RateLimiter(name = "BookEndpoint", fallbackMethod = "FallBackBook")
 public class BookController {
 
     @Autowired
@@ -35,6 +42,13 @@ public class BookController {
     
     @Autowired
     private BookMapper bookMapper;
+
+    public ResponseEntity<HashMap<String, Object>> FallBackBook(RequestNotPermitted ex) {
+        HashMap<String, Object> maps = new HashMap<>();
+        maps.put("message", "Troppe richieste, riprova tra poco");
+        maps.put("status", HttpStatus.TOO_MANY_REQUESTS.value());
+        return new ResponseEntity<>(maps, HttpStatus.TOO_MANY_REQUESTS);
+    }
 
     @GetMapping("/libri")
 	public ResponseEntity<HashMap<String, Object>> FindAll(){

@@ -1,11 +1,8 @@
-package com.student.orders.dto;
+package com.notification.services.events;
 
 import java.math.BigDecimal;
 
-import org.antlr.v4.runtime.misc.NotNull;
-import org.hibernate.annotations.NotFound;
-
-public record Checkout(
+public record OrderCreated(
     Integer id,
     String BookName,
     Integer OrderId,

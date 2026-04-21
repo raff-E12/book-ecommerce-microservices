@@ -15,7 +15,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "ordini",  schema = "public", catalog = "book-api-dispence")
+@Table(name = "ordini",  schema = "public")
 public class OrdersModel implements Serializable {
    
     @Id

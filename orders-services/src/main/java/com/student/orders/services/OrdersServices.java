@@ -2,22 +2,25 @@ package com.student.orders.services;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.hibernate.annotations.Check;
-import org.hibernate.annotations.processing.Find;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.student.orders.dto.Book;
+import com.student.orders.components.OrderKafka;
 import com.student.orders.dto.BookTableList;
 import com.student.orders.dto.Checkout;
 import com.student.orders.errors.IllegalResponseException;
+import com.student.orders.events.OrderCheck;
+import com.student.orders.events.OrderCreated;
+import com.student.orders.events.OrderFeedback;
 import com.student.orders.global.CreateOrder;
-import com.student.orders.mappers.MappersGlobals;
+import com.student.orders.global.interfaces.CheckOutQuery;
+import com.student.orders.mappers.CheckoutMapper;
 import com.student.orders.model.BooksModels;
 import com.student.orders.model.CheckOutModel;
 import com.student.orders.model.OrdersModel;
@@ -38,11 +41,41 @@ public class OrdersServices {
     private BookRepositery BookRepository;
 
     @Autowired
-    private MappersGlobals mappersGlobal;
+    private CheckoutMapper MapperCheck;
+
+    private final OrderKafka kafkaOrders;
+
+    // Utilizzo del Costruttore con Kafka
+    public OrdersServices(OrderKafka orderKafka){
+        this.kafkaOrders = orderKafka;
+    }
 
     public List<Checkout> getAllOrders(int ordineId) {
-        List<Checkout> checkList = checkRepository.findAllConTitolo(ordineId);
-        return checkList;
+        List<Object[]> checkList = checkRepository.findAllConTitolo(ordineId);
+         if (checkList == null || checkList.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        List<CheckOutQuery> queries = checkList.stream()
+            .map(arr -> new CheckOutQuery(
+                (Integer) arr[0],  
+                (String) arr[1], 
+                (Integer) arr[2],
+                (BigDecimal) arr[3], 
+                (Integer) arr[4],  
+                (BigDecimal) arr[5] 
+            ))
+            .toList();
+
+        kafkaOrders.sendFeedBack(
+            new OrderFeedback(
+                1,
+                "DB-FeedBack",
+                true
+            )
+        );
+
+        return MapperCheck.map(queries);
     }
 
     public boolean deleteProd(int id) {
@@ -87,6 +120,16 @@ public class OrdersServices {
             checkOut.setQuantita(prod.quantita());
             checkOut.setPrezzoSubtotale(prod.prezzo_subtotale());
             check.add(checkOut);
+            kafkaOrders.sendOrderCreated(
+                new OrderCreated(
+                    bookFind.getId(),
+                    bookFind.getTitolo(),
+                    order.getId(),
+                    bookFind.getPrezzo(),
+                    checkOut.getQuantita(),
+                    checkOut.getPrezzoSubtotale()
+                )
+            );
         }
 
         if (check != null && !check.isEmpty()) {
@@ -123,11 +166,22 @@ public class OrdersServices {
             OrdersModel orderToUpdate = FindOrder.get();
             orderToUpdate.setOrdinato(true);
             orderRepository.save(orderToUpdate);
+
+            // Invio del Evento al Consumer del Broker Kafka
+            kafkaOrders.sendOrderCompleted(
+                new OrderCheck(FindOrder.get().getId(), FindOrder.get().getPrezzoTotale(), FindOrder.get().getOrdinato())
+            );
+
             response.put("orderFound", true);
             response.put("orderCompleted", true);
         }
 
         return response;
+    }
+
+    public Optional<OrdersModel> OrdersFinder(int id){
+        Optional<OrdersModel> FindOrder = orderRepository.findById(id);
+        return FindOrder;
     }
     
 }
