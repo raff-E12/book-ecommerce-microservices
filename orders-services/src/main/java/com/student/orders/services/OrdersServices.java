@@ -153,13 +153,14 @@ public class OrdersServices {
     public boolean checkOrderExists(List<BookTableList> prod) {
         if (prod == null || prod.isEmpty()) return false;
 
-        List<Integer> requestedIds = prod.stream()
+        // Ricerca dei libri basate sulla lista di id effettiva
+        List<Integer> requestedId = prod.stream()
             .map(item -> item.libro_id().intValue())
             .toList();
 
-        List<Integer> foundIds = BookRepository.findExistingIds(requestedIds);
+        List<Integer> foundIds = BookRepository.findExistingIds(requestedId);
 
-        return foundIds.containsAll(requestedIds);
+        return foundIds.containsAll(requestedId);
     }
 
     public Map<String, Boolean> checkOrderAfterBuy(int id){
