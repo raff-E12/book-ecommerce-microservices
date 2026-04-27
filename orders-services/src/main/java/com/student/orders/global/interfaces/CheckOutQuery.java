@@ -9,15 +9,31 @@ public class CheckOutQuery {
     private BigDecimal Price;
     private Integer Quantity;
     private BigDecimal SubTotal;
+    private String CoverColor;
+    private String Author;
+    private String Editor;
 
     // Costruttore
-    public CheckOutQuery(Integer id, String BookName, Integer OrderId, BigDecimal Price, Integer Quantity, BigDecimal SubTotal) {
+    public CheckOutQuery(
+        Integer id, 
+        String BookName, 
+        Integer OrderId,
+        BigDecimal Price,
+        Integer Quantity,
+        BigDecimal SubTotal,
+        String CoverColor,
+        String Author,
+        String Editor
+        ) {
         this.id = id;
         this.BookName = BookName;
         this.OrderId = OrderId;
         this.Price = Price;
         this.Quantity = Quantity;
         this.SubTotal = SubTotal;
+        this.CoverColor = CoverColor;
+        this.Author = Author;
+        this.Editor = Editor;
     }
 
     // Getter
@@ -45,6 +61,18 @@ public class CheckOutQuery {
         return SubTotal;
     }
 
+    public String getCoverColor() {
+        return CoverColor;
+    }
+
+    public String getAuthor() {
+        return Author;
+    }
+
+     public String getEditor() {
+        return Editor;
+    }
+
     // Setter
     public void setId(Integer id) {
         this.id = id;
@@ -68,6 +96,18 @@ public class CheckOutQuery {
 
     public void setSubTotal(BigDecimal SubTotal) {
         this.SubTotal = SubTotal;
+    }
+    
+    public void setCoverColor(String Color) {
+        this.CoverColor = Color;
+    }    
+
+    public void setAuthor(String Author) {
+        this.Author = Author;
+    }    
+
+    public void setEditor(String Editor) {
+        this.Editor = Editor;
     }    
 }
 

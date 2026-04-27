@@ -100,18 +100,22 @@ public class OdersController {
     public ResponseEntity<HashMap<String, Object>> postMethodName(@RequestBody CreateOrder orders) {
         HashMap<String, Object> maps = new HashMap<>();
 
-        if (ordersServices.checkOrderExists(orders.getShop())) {
+        if (!ordersServices.checkOrderExists(orders.getShop())) {
             throw new ResourceNotFoundException("Uno o più prodotti non trovati");
         }
 
-        boolean response = ordersServices.createOrder(orders);
-        if (!response) {
+        HashMap<String, Object> response = ordersServices.createOrder(orders);
+        boolean status = Boolean.parseBoolean(response.get("status").toString());
+        if (!status) {
             throw new IllegalResponseException("Errore nella creazione dell'ordine");
         }
+
+        Integer id = Integer.parseInt(response.get("id").toString());
 
         maps.put("message", "Ordine creato con successo");
         maps.put("feedback", response);
         maps.put("status", HttpStatus.OK.value());
+        maps.put("IdOrder", id);
 
         return new ResponseEntity<HashMap<String, Object>>(maps, HttpStatus.OK);
     }

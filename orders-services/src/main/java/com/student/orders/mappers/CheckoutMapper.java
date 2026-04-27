@@ -18,6 +18,9 @@ public interface CheckoutMapper {
     @Mapping(source = "price", target = "Price")
     @Mapping(source = "quantity", target = "Quantity")
     @Mapping(source = "subTotal", target = "SubTotal")
+    @Mapping(source = "coverColor", target = "CoverColor")
+    @Mapping(source = "editor", target = "Editor")
+    @Mapping(source = "author", target = "Author")
     Checkout map(CheckOutQuery query);
 
     List<Checkout> map(List<CheckOutQuery> queries);

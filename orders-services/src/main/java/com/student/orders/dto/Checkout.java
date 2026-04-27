@@ -11,5 +11,8 @@ public record Checkout(
     Integer OrderId,
     BigDecimal Price,
     Integer Quantity,
-    BigDecimal SubTotal
+    BigDecimal SubTotal,
+    String CoverColor,
+    String Editor,
+    String Author
 ) {}

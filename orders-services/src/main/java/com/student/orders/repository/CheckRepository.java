@@ -23,7 +23,10 @@ public interface CheckRepository extends JpaRepository<CheckOutModel, Integer> {
             c.ordine_id as OrderId,
             c.libro_prezzo as Price,
             c.quantita as Quantity,
-            c.prezzo_subtotale as SubTotal
+            c.prezzo_subtotale as SubTotal,
+            l.cover_color as CoverColor,
+            l.editore as Editore,
+            l.autore as Autore
         FROM public.checkout c
         INNER JOIN public.libri l ON c.libro_id = l.id
         WHERE c.ordine_id = :ordineId

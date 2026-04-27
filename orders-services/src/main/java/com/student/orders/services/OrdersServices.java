@@ -63,7 +63,10 @@ public class OrdersServices {
                 (Integer) arr[2],
                 (BigDecimal) arr[3], 
                 (Integer) arr[4],  
-                (BigDecimal) arr[5] 
+                (BigDecimal) arr[5],
+                (String) arr[6],
+                (String) arr[7],
+                (String) arr[8]
             ))
             .toList();
 
@@ -97,9 +100,11 @@ public class OrdersServices {
         return false;
     }
 
-    public boolean createOrder(CreateOrder orders) {
+    public HashMap<String, Object> createOrder(CreateOrder orders) {
         OrdersModel order = new OrdersModel();
         List<CheckOutModel> check = new ArrayList<>();
+        HashMap<String, Object> results = new HashMap<>();
+        int id = 0;
 
         if (orders.getTotal() == 0) {
             throw new IllegalResponseException("Il totale dell'ordine deve essere maggiore di zero");
@@ -134,19 +139,27 @@ public class OrdersServices {
 
         if (check != null && !check.isEmpty()) {
             order.setRigheCheckout(check);
-            orderRepository.save(order);
-            return true;
+            OrdersModel saves = orderRepository.save(order);
+            id = saves.getId();
+            results.put("status", false);
+            results.put("id", 0);
         }
-        return false;
+        
+        results.put("status", true);
+        results.put("id", id);
+        return results;
     }
 
     public boolean checkOrderExists(List<BookTableList> prod) {
-        for (BookTableList item : prod) {
-            if (checkRepository.findByIdBook(item.libro_id().intValue()) == null) {
-                return false;
-            }
-        }
-        return true;
+        if (prod == null || prod.isEmpty()) return false;
+
+        List<Integer> requestedIds = prod.stream()
+            .map(item -> item.libro_id().intValue())
+            .toList();
+
+        List<Integer> foundIds = BookRepository.findExistingIds(requestedIds);
+
+        return foundIds.containsAll(requestedIds);
     }
 
     public Map<String, Boolean> checkOrderAfterBuy(int id){
