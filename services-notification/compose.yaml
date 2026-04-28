@@ -53,6 +53,13 @@ services:
         KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092 # Qui usa il nome interno!
       networks:
         - microservices-net
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: zipkin
+    ports:
+      - "9411:9411"
+    networks:
+      - microservices-net
 
 volumes:
   postgres_data:
