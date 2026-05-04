@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+
+  zipkin:
+    image: openzipkin/zipkin:latest
+    container_name: config-zipkin
+    ports:
+      - "9411:9411"
+    networks:
+      - config-net
+
+  eureka-server:
+    image: discovery-client-eureka:latest
+    container_name: config-eureka
+    ports:
+      - "8761:8761"
+    networks:
+      - config-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  spring-config-book:
+    build: . 
+    container_name: spring-config-book
+    ports:
+      - "8084:8084"
+    environment:
+      SPRING_APPLICATION_NAME: spring-config-book
+      SERVER_PORT: 8084
+      SPRING_PROFILES_ACTIVE: native
+      SPRING_CLOUD_CONFIG_SERVER_NATIVE_SEARCH_LOCATIONS: >-
+        classpath:/config/book-services/,
+        classpath:/config/orders-services/
+      EUREKA_CLIENT_ENABLED: "true"
+      EUREKA_CLIENT_REGISTER_WITH_EUREKA: "true"
+      EUREKA_CLIENT_FETCH_REGISTRY: "true"
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      MANAGEMENT_ZIPKIN_TRACING_ENDPOINT: http://zipkin:9411/api/v2/spans
+      MANAGEMENT_TRACING_SAMPLING_PROBABILITY: "1.0"
+      MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: "*"
+      MANAGEMENT_ENDPOINT_HEALTH_SHOW_DETAILS: always
+    networks:
+      - config-net
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      zipkin:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8084/actuator/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+networks:
+  config-net:
+    driver: bridge

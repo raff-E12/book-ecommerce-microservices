@@ -1,0 +1,102 @@
+version: '3.8'
+
+services:
+
+  zipkin:
+    image: openzipkin/zipkin:latest
+    container_name: gateway-zipkin
+    ports:
+      - "9411:9411"
+    networks:
+      - gateway-net
+
+  eureka-server:
+    image: discovery-client-services:latest
+    container_name: gateway-eureka
+    ports:
+      - "8761:8761"
+    networks:
+      - gateway-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  book-services:
+    image: book-services:latest
+    container_name: gateway-book-services
+    ports:
+      - "8085:8085"
+    networks:
+      - gateway-net
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8085/actuator/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  order-services:
+    image: order-services:latest
+    container_name: gateway-order-services
+    ports:
+      - "8082:8082"
+    networks:
+      - gateway-net
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8082/actuator/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  gateway-services:
+    build: . 
+    container_name: gateway-services
+    ports:
+      - "8089:8089"
+    environment:
+      SPRING_APPLICATION_NAME: gateway-services
+      SERVER_PORT: 8089
+      SPRING_PROFILES_ACTIVE: dev
+      SPRING_CLOUD_CONFIG_DISCOVERY_ENABLED: "false"
+      SPRING_CLOUD_CONFIG_IMPORT_CHECK_ENABLED: "false"
+      SPRING_CLOUD_GATEWAY_SERVER_WEBMVC_ENABLED: "true"
+      EUREKA_CLIENT_REGISTER_WITH_EUREKA: "true"
+      EUREKA_CLIENT_FETCH_REGISTRY: "true"
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      MANAGEMENT_ZIPKIN_TRACING_ENDPOINT: http://zipkin:9411/api/v2/spans
+      MANAGEMENT_TRACING_SAMPLING_PROBABILITY: "1.0"
+      MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: "*"
+      SPRING_CLOUD_GATEWAY_SERVER_WEBMVC_ROUTES_0_ID: book-service
+      SPRING_CLOUD_GATEWAY_SERVER_WEBMVC_ROUTES_0_URI: http://book-services:8085
+      SPRING_CLOUD_GATEWAY_SERVER_WEBMVC_ROUTES_0_PREDICATES_0: Path=/api-book/**
+      SPRING_CLOUD_GATEWAY_SERVER_WEBMVC_ROUTES_0_FILTERS_0: RewritePath=/api-book/(?<segment>.*), /$\{segment}
+      SPRING_CLOUD_GATEWAY_SERVER_WEBMVC_ROUTES_0_FILTERS_1: CircuitBreaker=name=bookService,fallbackUri=forward:/api/fallback/book
+      SPRING_CLOUD_GATEWAY_SERVER_WEBMVC_ROUTES_1_ID: order-service
+      SPRING_CLOUD_GATEWAY_SERVER_WEBMVC_ROUTES_1_URI: http://order-services:8082
+      SPRING_CLOUD_GATEWAY_SERVER_WEBMVC_ROUTES_1_PREDICATES_0: Path=/api-orders/**
+      SPRING_CLOUD_GATEWAY_SERVER_WEBMVC_ROUTES_1_FILTERS_0: RewritePath=/api-orders/(?<segment>.*), /$\{segment}
+      SPRING_CLOUD_GATEWAY_SERVER_WEBMVC_ROUTES_1_FILTERS_1: CircuitBreaker=name=orderService,fallbackUri=forward:/api/fallback/order
+      RESILIENCE4J_CIRCUITBREAKER_INSTANCES_BOOKSERVICE_REGISTER_HEALTH_INDICATOR: "false"
+      RESILIENCE4J_CIRCUITBREAKER_INSTANCES_ORDERSERVICE_REGISTER_HEALTH_INDICATOR: "false"
+    networks:
+      - gateway-net
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      book-services:
+        condition: service_healthy
+      order-services:
+        condition: service_healthy
+      zipkin:
+        condition: service_started
+
+networks:
+  gateway-net:
+    driver: bridge

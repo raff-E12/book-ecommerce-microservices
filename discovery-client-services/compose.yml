@@ -1,26 +1,37 @@
+version: '3.8'
 
 services:
-  server:
-    build:
-      context: .
+  zipkin:
+    image: openzipkin/zipkin:latest
+    container_name: eureka-zipkin
     ports:
-      - 8761:8761
+      - "9411:9411"
+    networks:
+      - eureka-net
+
+  discovery-client-services:
+    build: . 
+    container_name: discovery-client-services
+    ports:
+      - "8761:8761"
     environment:
-      - SPRING_APPLICATION_NAME=discovery-client-services
-      # Indichiamo a Eureka dove inviare le tracce all'interno della rete Docker
-      - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://zipkin:9411/api/v2/spans
-      - MANAGEMENT_TRACING_SAMPLING_PROBABILITY=1.0
+      SPRING_APPLICATION_NAME: discovery-client-services
+      SERVER_PORT: 8761
+      EUREKA_CLIENT_REGISTER_WITH_EUREKA: "false"
+      EUREKA_CLIENT_FETCH_REGISTRY: "false"
+      MANAGEMENT_ZIPKIN_TRACING_ENDPOINT: http://zipkin:9411/api/v2/spans
+      MANAGEMENT_TRACING_SAMPLING_PROBABILITY: "1.0"
+      MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: "*"
+    networks:
+      - eureka-net
     depends_on:
       - zipkin
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      interval: 15s
+      timeout: 5s
+      retries: 5
 
-  zipkin:
-    image: openzipkin/zipkin
-    container_name: zipkin-server
-    ports:
-      - "9411:9411"
-
+networks:
+  eureka-net:
+    driver: bridge

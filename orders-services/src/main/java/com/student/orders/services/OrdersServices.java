@@ -119,17 +119,18 @@ public class OrdersServices {
         for (BookTableList prod : orders.getShop()) {
             CheckOutModel checkOut = new CheckOutModel();
             BooksModels bookFind = BookRepository.findAllById(prod.libro_id()).stream().findFirst().orElse(null);
+    
             checkOut.setLibro(bookFind);
             checkOut.setOrdine(order);
             checkOut.setLibroPrezzo(prod.libro_prezzo());
             checkOut.setQuantita(prod.quantita());
             checkOut.setPrezzoSubtotale(prod.prezzo_subtotale());
             check.add(checkOut);
+
             kafkaOrders.sendOrderCreated(
                 new OrderCreated(
                     bookFind.getId(),
                     bookFind.getTitolo(),
-                    order.getId(),
                     bookFind.getPrezzo(),
                     checkOut.getQuantita(),
                     checkOut.getPrezzoSubtotale()
@@ -183,7 +184,7 @@ public class OrdersServices {
 
             // Invio del Evento al Consumer del Broker Kafka
             kafkaOrders.sendOrderCompleted(
-                new OrderCheck(FindOrder.get().getId(), FindOrder.get().getPrezzoTotale(), FindOrder.get().getOrdinato())
+                new OrderCheck(orderToUpdate.getId(), orderToUpdate.getPrezzoTotale(), orderToUpdate.getOrdinato())
             );
 
             response.put("orderFound", true);
