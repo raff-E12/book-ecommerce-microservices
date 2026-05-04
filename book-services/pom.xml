@@ -102,11 +102,6 @@
 			<artifactId>zipkin-reporter-brave</artifactId>
 		</dependency>
 
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-		</dependency>
-
 	</dependencies>
 
 	<dependencyManagement>

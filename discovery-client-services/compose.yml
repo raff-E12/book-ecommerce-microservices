@@ -1,0 +1,26 @@
+
+services:
+  server:
+    build:
+      context: .
+    ports:
+      - 8761:8761
+    environment:
+      - SPRING_APPLICATION_NAME=discovery-client-services
+      # Indichiamo a Eureka dove inviare le tracce all'interno della rete Docker
+      - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://zipkin:9411/api/v2/spans
+      - MANAGEMENT_TRACING_SAMPLING_PROBABILITY=1.0
+    depends_on:
+      - zipkin
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: zipkin-server
+    ports:
+      - "9411:9411"
+

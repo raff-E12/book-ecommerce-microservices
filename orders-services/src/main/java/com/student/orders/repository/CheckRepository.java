@@ -46,5 +46,10 @@ public interface CheckRepository extends JpaRepository<CheckOutModel, Integer> {
 
     @Query("SELECT MAX(c.id) FROM CheckOutModel c")
     Integer findMaxId();
+
+    // Attenzione: Fare la differenza tra una classe java e query quando si creano diverse query personalizzate
+    @Query(value = "DELETE FROM public.checkout WHERE libro_id = :id", nativeQuery = true)
+    @Modifying
+    void deleteByLibroId(@Param("id") int id);
     
 }

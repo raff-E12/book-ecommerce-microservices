@@ -1,0 +1,18 @@
+global:
+  scrape_interval: 15s      # ogni 15s va a leggere le metriche
+  evaluation_interval: 15s
+
+scrape_configs:
+
+  # La tua app Spring Boot
+  - job_name: 'book-api'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['host.docker.internal:8081']
+        # ^ se la tua app gira fuori Docker usa host.docker.internal
+        # se è dentro Docker usa il nome del container: ['book-api:8081']
+
+  # Prometheus stesso (opzionale ma utile)
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']

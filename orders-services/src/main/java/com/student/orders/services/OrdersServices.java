@@ -83,7 +83,7 @@ public class OrdersServices {
 
     public boolean deleteProd(int id) {
         if (checkRepository.existsById(id)) {
-            checkRepository.deleteById(id);
+            checkRepository.deleteByLibroId(id);
             return true;
         }
         return false;

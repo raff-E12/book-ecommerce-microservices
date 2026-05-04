@@ -8,7 +8,8 @@
             "mainClass": "com.discovery.client.ClientApplication",
             "projectName": "client",
             "args": "",
-            "envFile": "${workspaceFolder}/.env"
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=52674 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=client"
         },
         {
             "type": "java",
@@ -37,6 +38,16 @@
             "cwd": "${workspaceFolder}",
             "mainClass": "com.student.orders.OrdersApplication",
             "projectName": "orders",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-ConfigApplication<config>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.book.config.ConfigApplication",
+            "projectName": "config",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
         }
