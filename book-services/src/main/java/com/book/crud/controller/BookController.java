@@ -188,6 +188,9 @@ public class BookController {
         if (book.getCoverColor() != null && !book.getCoverColor().isBlank())
             existing.setCoverColor(book.getCoverColor());
 
+        if (book.getCoverImg() != null && !book.getCoverImg().isBlank())
+            existing.setCoverImg(book.getCoverImg());
+
         books.UpdateBook(existing);
         maps.put("message", "Libro è stato aggiornato!!");
         maps.put("status", HttpStatus.OK.value());

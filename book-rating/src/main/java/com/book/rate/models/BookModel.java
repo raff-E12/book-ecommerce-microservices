@@ -1,4 +1,4 @@
-package com.book.crud.model;
+package com.book.rate.models;
 
 import jakarta.persistence.*;
 
@@ -49,9 +49,6 @@ public class BookModel implements Serializable {
 
     @Column(name = "cover_color", length = 20)
     private String coverColor;
-
-    @Column(name = "cover_img", columnDefinition = "TEXT")
-    private String coverImg = "Not Found";
  
     // Relazione inversa: un libro può apparire in più righe di checkout
     @OneToMany(mappedBy = "libro", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -64,7 +61,7 @@ public class BookModel implements Serializable {
     public BookModel(String titolo, String autore, String editore,
                 Integer annoPubblicazione, String isbn, String categoria,
                 Integer numCopie, Integer disponibile, String posizioneScaffale,
-                String note, BigDecimal prezzo, String coverImg) {
+                String note, BigDecimal prezzo, String coverColor) {
         this.titolo = titolo;
         this.autore = autore;
         this.editore = editore;
@@ -76,7 +73,7 @@ public class BookModel implements Serializable {
         this.posizioneScaffale = posizioneScaffale;
         this.note = note;
         this.prezzo = prezzo;
-        this.coverImg = coverImg;
+        this.coverColor = coverColor;
     }
  
     // ─── Getters & Setters ───────────────────────────────────────────────────
@@ -119,9 +116,6 @@ public class BookModel implements Serializable {
 
     public String getCoverColor() { return coverColor; }
     public void setCoverColor(String coverColor) { this.coverColor = coverColor; }
-
-    public String getCoverImg() { return coverImg; }
-    public void setCoverImg(String coverImg) { this.coverImg = coverImg; }
  
     public List<CheckoutModel> getRigheCheckout() { return righeCheckout; }
     public void setRigheCheckout(List<CheckoutModel> righeCheckout) { this.righeCheckout = righeCheckout; }
