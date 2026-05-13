@@ -141,6 +141,25 @@ public class BookController {
        return new ResponseEntity<HashMap<String, Object>>(maps, HttpStatus.NOT_FOUND);
     }
 
+    @PatchMapping("/delete-check/{id}")
+     public ResponseEntity<HashMap<String, Object>> BookDeleteCheck(@PathVariable Integer id) {
+        HashMap<String, Object> maps = new HashMap<>();
+        Optional<Book> bookFind = books.ListBookID(id);
+        Boolean isTrashed = bookFind.get().trashed();
+
+        if(isTrashed){
+            maps.put("message", "Libro Gia Segnato Come Eliminato!!");
+            maps.put("status", HttpStatus.BAD_REQUEST.value());
+            return new ResponseEntity<HashMap<String, Object>>(maps, HttpStatus.BAD_REQUEST);
+        }
+
+        books.UpdateTrash(id);
+        maps.put("message", "Il Libro Cancellato con Successo!!");
+        maps.put("status", HttpStatus.OK.value());
+
+        return new ResponseEntity<HashMap<String, Object>>(maps, HttpStatus.OK);
+    }
+
     @PatchMapping("/libri/{id}")
     public ResponseEntity<HashMap<String, Object>> BookUpdateFind(@PathVariable int id, @RequestBody BookModel book) {
         HashMap<String, Object> maps = new HashMap<>();
@@ -196,5 +215,21 @@ public class BookController {
         maps.put("status", HttpStatus.OK.value());
         return new ResponseEntity<HashMap<String, Object>>(maps, HttpStatus.OK);
     }
+
+    @GetMapping("/get-list-trashed")
+	public ResponseEntity<HashMap<String, Object>> FindAllNotTrashed(){
+        HashMap<String, Object> maps = new HashMap<>();
+        Boolean sets = false;
+        List<Book> response = books.TrashListBooks(sets);
+
+        if(response.isEmpty()){
+            throw new ResourceNotFoundException("Lista Vuota");
+        }
+
+        maps.put("message", "Lista Completa");
+        maps.put("books", response);
+        maps.put("status", HttpStatus.OK.value());
+        return new ResponseEntity<HashMap<String, Object>>(maps, HttpStatus.OK);
+	}
 
 }

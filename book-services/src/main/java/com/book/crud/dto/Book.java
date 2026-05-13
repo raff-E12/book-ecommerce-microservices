@@ -18,5 +18,6 @@ public record Book(
     String note,
     BigDecimal prezzo,
     String coverColor,
-    String coverImg
+    String coverImg,
+    Boolean trashed
 ) {}

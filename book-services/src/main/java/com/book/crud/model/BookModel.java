@@ -52,7 +52,9 @@ public class BookModel implements Serializable {
 
     @Column(name = "cover_img", columnDefinition = "TEXT")
     private String coverImg = "Not Found";
- 
+
+    @Column(name = "trashed", nullable = false)
+    private boolean trashed = false;
     // Relazione inversa: un libro può apparire in più righe di checkout
     @OneToMany(mappedBy = "libro", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<CheckoutModel> righeCheckout;
@@ -64,7 +66,7 @@ public class BookModel implements Serializable {
     public BookModel(String titolo, String autore, String editore,
                 Integer annoPubblicazione, String isbn, String categoria,
                 Integer numCopie, Integer disponibile, String posizioneScaffale,
-                String note, BigDecimal prezzo, String coverImg) {
+                String note, BigDecimal prezzo, String coverImg, Boolean trash) {
         this.titolo = titolo;
         this.autore = autore;
         this.editore = editore;
@@ -77,6 +79,7 @@ public class BookModel implements Serializable {
         this.note = note;
         this.prezzo = prezzo;
         this.coverImg = coverImg;
+        this.trashed = trash;
     }
  
     // ─── Getters & Setters ───────────────────────────────────────────────────
@@ -122,6 +125,9 @@ public class BookModel implements Serializable {
 
     public String getCoverImg() { return coverImg; }
     public void setCoverImg(String coverImg) { this.coverImg = coverImg; }
+
+    public Boolean getTrashed(){ return trashed; };
+    public void setTrashed(Boolean feed){ this.trashed = feed; }
  
     public List<CheckoutModel> getRigheCheckout() { return righeCheckout; }
     public void setRigheCheckout(List<CheckoutModel> righeCheckout) { this.righeCheckout = righeCheckout; }

@@ -1,5 +1,6 @@
 package com.book.crud.services;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,5 +44,19 @@ public class BookServices {
 
     public void UpdateBook(BookModel book){
         books.save(book);
+    }
+
+    public void UpdateTrash(int id){
+        books.trashById(id);
+    }
+
+    public List<Book> TrashListBooks(boolean set){
+        if(!set){
+            List<BookModel> lists = books.findAllByTrashedFalse();
+            return bookMapper.toDtoList(lists);
+        }
+
+        List<BookModel> lists = books.findAllByTrashedTrue();
+        return bookMapper.toDtoList(lists);
     }
 }
