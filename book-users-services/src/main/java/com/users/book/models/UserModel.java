@@ -15,7 +15,6 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
 @Table(name = "utenti", schema = "public")
 public class UserModel implements Serializable {

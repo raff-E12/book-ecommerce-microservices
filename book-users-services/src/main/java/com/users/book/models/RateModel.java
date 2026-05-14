@@ -16,7 +16,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="recensioni", schema = "public")
+@Table(name = "recensioni", schema = "public")
 public class RateModel implements Serializable{
 
     @Id

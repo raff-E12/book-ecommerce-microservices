@@ -60,8 +60,10 @@ public class UserServices {
         Map<String, Object> response = new HashMap<>();
         try {
             // Verifica se l'utente esiste
-            Optional<UserModel> user = userRepository.findByEmail(accessRequest.email());
-            System.out.println(user);
+            String email = accessRequest.email().trim();
+            String password = accessRequest.password().trim();
+            Optional<UserModel> user = userRepository.findByEmail(email);
+            
             if (user.isEmpty()) {
                 response.put("success", false);
                 response.put("error", true);
@@ -70,7 +72,7 @@ public class UserServices {
             }
 
             // Verifica password (semplice confronto, in produzione usare BCrypt)
-            if (!user.get().getPassword().equals(accessRequest.password())) {
+            if (!user.get().getPassword().equals(password)) {
                 response.put("success", false);
                 response.put("error", true);
                 response.put("message", "Password errata.");
