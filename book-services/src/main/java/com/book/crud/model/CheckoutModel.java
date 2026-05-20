@@ -1,9 +1,21 @@
 package com.book.crud.model;
 
-import jakarta.persistence.*;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 @Entity
 @Table(
@@ -15,17 +27,15 @@ import java.math.BigDecimal;
             name = "uq_checkout_ordine_libro",
             columnNames = { "ordine_id", "libro_id" }
         )
-    } ,
-    schema = "public"
+    }
 )
-public class CheckoutModel implements Serializable {
-
+public class CheckOutModel implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     // FK → ordini.id
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "ordine_id", nullable = false)
     private OrdineModel ordine;
 
@@ -45,9 +55,9 @@ public class CheckoutModel implements Serializable {
 
     // ─── Costruttori ────────────────────────────────────────────────────────
 
-    public CheckoutModel() {}
+    public CheckOutModel() {}
 
-    public CheckoutModel(OrdineModel ordine, BookModel libro, BigDecimal libroPrezzo, Integer quantita) {
+    public CheckOutModel(OrdineModel ordine, BookModel libro, BigDecimal libroPrezzo, Integer quantita) {
         this.ordine = ordine;
         this.libro = libro;
         this.libroPrezzo = libroPrezzo;
@@ -92,3 +102,4 @@ public class CheckoutModel implements Serializable {
     public BigDecimal getPrezzoSubtotale() { return prezzoSubtotale; }
     public void setPrezzoSubtotale(BigDecimal prezzoSubtotale) { this.prezzoSubtotale = prezzoSubtotale; }
 }
+

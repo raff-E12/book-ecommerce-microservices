@@ -11,11 +11,13 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "ordini",  schema = "public")
+@Table(name = "ordini")
 public class OrdersModel implements Serializable {
    
     @Id
@@ -31,11 +33,16 @@ public class OrdersModel implements Serializable {
     @OneToMany(mappedBy = "ordine", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<CheckOutModel> righeCheckout;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_utente", referencedColumnName = "id")
+    private UserModel utente;
+
     public OrdersModel() {}
 
-    public OrdersModel(BigDecimal prezzoTotale, Boolean ordinato) {
+    public OrdersModel(BigDecimal prezzoTotale, Boolean ordinato, UserModel utente) {
         this.prezzoTotale = prezzoTotale;
         this.ordinato = ordinato;
+        this.utente = utente;
     }
 
     public Integer getId() { return id; }
@@ -49,4 +56,8 @@ public class OrdersModel implements Serializable {
 
     public List<CheckOutModel> getRigheCheckout() { return righeCheckout; }
     public void setRigheCheckout(List<CheckOutModel> righeCheckout) { this.righeCheckout = righeCheckout; }
+
+    public UserModel getUtente() { return utente; }
+    public void setUtente(UserModel utente) { this.utente = utente; }
 }
+

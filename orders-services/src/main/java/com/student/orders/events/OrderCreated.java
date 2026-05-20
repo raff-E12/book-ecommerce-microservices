@@ -7,5 +7,6 @@ public record OrderCreated(
     String BookName,
     BigDecimal Price,
     Integer Quantity,
-    BigDecimal SubTotal
+    BigDecimal SubTotal,
+    Integer UserID
 ) {}

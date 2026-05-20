@@ -42,6 +42,11 @@ public class RateServices {
         return bookDtoOptional;
     }
 
+    public List<Rate> getUserComments(Integer userId) {
+        List<RateModel> rates = rateRepositery.findByUtenteId(userId);
+        return rates.stream().map(rateMapper::toRate).toList();
+    }
+
     public Rate createComment(RateModel rateModel) {
         RateModel savedRate = rateRepositery.save(rateModel);
         return rateMapper.toRate(savedRate);
@@ -51,5 +56,13 @@ public class RateServices {
         List<RateModel> rates = rateRepositery.findAll();
         List<Rate> bookDtoOptional = rates.stream().map(rateMapper::toRate).toList();
         return bookDtoOptional;
+    }
+
+    public Boolean getRateDelete(Integer id){
+        int DeleteRate = rateRepositery.deleteByIdNative(id);
+        if (DeleteRate == 0) {
+            return false;
+        }
+        return true;
     }
 }

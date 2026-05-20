@@ -57,7 +57,7 @@ public class BookModel implements Serializable {
     private boolean trashed = false;
     // Relazione inversa: un libro può apparire in più righe di checkout
     @OneToMany(mappedBy = "libro", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<CheckoutModel> righeCheckout;
+    private List<CheckOutModel> righeCheckout;
  
     // ─── Costruttori ────────────────────────────────────────────────────────
  
@@ -129,6 +129,6 @@ public class BookModel implements Serializable {
     public Boolean getTrashed(){ return trashed; };
     public void setTrashed(Boolean feed){ this.trashed = feed; }
  
-    public List<CheckoutModel> getRigheCheckout() { return righeCheckout; }
-    public void setRigheCheckout(List<CheckoutModel> righeCheckout) { this.righeCheckout = righeCheckout; }
+    public List<CheckOutModel> getRigheCheckout() { return righeCheckout; }
+    public void setRigheCheckout(List<CheckOutModel> righeCheckout) { this.righeCheckout = righeCheckout; }
 }

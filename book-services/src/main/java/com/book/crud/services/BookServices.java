@@ -50,6 +50,10 @@ public class BookServices {
         books.trashById(id);
     }
 
+    public void RestoreTrash(int id){
+        books.restoreById(id);
+    }
+
     public List<Book> TrashListBooks(boolean set){
         if(!set){
             List<BookModel> lists = books.findAllByTrashedFalse();

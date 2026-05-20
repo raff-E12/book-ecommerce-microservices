@@ -24,9 +24,11 @@ import com.student.orders.mappers.CheckoutMapper;
 import com.student.orders.model.BooksModels;
 import com.student.orders.model.CheckOutModel;
 import com.student.orders.model.OrdersModel;
+import com.student.orders.model.UserModel;
 import com.student.orders.repository.BookRepositery;
 import com.student.orders.repository.CheckRepository;
 import com.student.orders.repository.OrderRepository;
+import com.student.orders.repository.UserRepository;
 
 @Service
 public class OrdersServices {
@@ -42,6 +44,9 @@ public class OrdersServices {
 
     @Autowired
     private CheckoutMapper MapperCheck;
+
+    @Autowired
+    private UserRepository userRepository;
 
     private final OrderKafka kafkaOrders;
 
@@ -105,12 +110,15 @@ public class OrdersServices {
         List<CheckOutModel> check = new ArrayList<>();
         HashMap<String, Object> results = new HashMap<>();
         int id = 0;
+        Integer UserId = orders.getUserID();
+        Optional<UserModel> FindUser = userRepository.findById(UserId);
 
         if (orders.getTotal() == 0) {
             throw new IllegalResponseException("Il totale dell'ordine deve essere maggiore di zero");
         }
 
         order.setPrezzoTotale(BigDecimal.valueOf(orders.getTotal()));
+        order.setUtente(FindUser.get());
 
         if (orders.getShop() == null || orders.getShop().isEmpty()) {
             throw new IllegalResponseException("La lista dei prodotti non può essere vuota");
@@ -133,7 +141,8 @@ public class OrdersServices {
                     bookFind.getTitolo(),
                     bookFind.getPrezzo(),
                     checkOut.getQuantita(),
-                    checkOut.getPrezzoSubtotale()
+                    checkOut.getPrezzoSubtotale(),
+                    FindUser.get().getId()
                 )
             );
         }

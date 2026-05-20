@@ -13,6 +13,7 @@ public interface RatingMapping {
 
     @Mapping(source = "id",          target = "Id")
     @Mapping(source = "libro.id",    target = "BookId")
+    @Mapping(source = "utente.id",   target = "UserId")
     @Mapping(source = "descrizione", target = "Description")
     @Mapping(source = "voto",        target = "Vote")
     @Mapping(source = "checked",     target = "Checked")

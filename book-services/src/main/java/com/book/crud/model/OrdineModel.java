@@ -22,15 +22,20 @@ public class OrdineModel implements Serializable {
 
     // Relazione: un ordine contiene più righe di checkout
     @OneToMany(mappedBy = "ordine", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<CheckoutModel> righeCheckout;
+    private List<CheckOutModel> righeCheckout;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_utente", referencedColumnName = "id")
+    private UserModel utente;
 
     // ─── Costruttori ────────────────────────────────────────────────────────
 
     public OrdineModel() {}
 
-    public OrdineModel(BigDecimal prezzoTotale, Boolean ordinato) {
+    public OrdineModel(BigDecimal prezzoTotale, Boolean ordinato, UserModel utenti) {
         this.prezzoTotale = prezzoTotale;
         this.ordinato = ordinato;
+        this.utente = utenti;
     }
 
     // ─── Getters & Setters ───────────────────────────────────────────────────
@@ -44,6 +49,9 @@ public class OrdineModel implements Serializable {
     public Boolean getOrdinato() { return ordinato; }
     public void setOrdinato(Boolean ordinato) { this.ordinato = ordinato; }
 
-    public List<CheckoutModel> getRigheCheckout() { return righeCheckout; }
-    public void setRigheCheckout(List<CheckoutModel> righeCheckout) { this.righeCheckout = righeCheckout; }
+    public UserModel getUtente() { return utente; }
+    public void setUtente(UserModel utente) { this.utente = utente; }
+
+    public List<CheckOutModel> getRigheCheckout() { return righeCheckout; }
+    public void setRigheCheckout(List<CheckOutModel> righeCheckout) { this.righeCheckout = righeCheckout; }
 }

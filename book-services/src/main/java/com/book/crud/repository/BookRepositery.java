@@ -30,6 +30,6 @@ public interface BookRepositery extends JpaRepository<BookModel, Integer>  {
 
     @Modifying
     @Transactional
-    @Query("UPDATE BookModel b SET b.trashed = true WHERE b.id = :id")
+    @Query("UPDATE BookModel b SET b.trashed = false WHERE b.id = :id")
     void restoreById(@Param("id") Integer id);
 }

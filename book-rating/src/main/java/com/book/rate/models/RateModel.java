@@ -1,11 +1,9 @@
 package com.book.rate.models;
 
-import org.hibernate.annotations.ManyToAny;
-
-import jakarta.annotation.Generated;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -25,24 +23,31 @@ public class RateModel {
     @JoinColumn(name = "libro_id", nullable = false)
     private BookModel libro;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_utente", referencedColumnName = "id", nullable = false,
+        foreignKey = @ForeignKey(name = "fk_user_recensioni"))
+    private UserModel utente;
+
     @Column(name="descrizione", length = 500)
     private String descrizione;
 
     @Column(name = "voto", nullable = false)
-    Integer voto;
+    private Integer voto;
 
     @Column(name = "\"check\"", nullable = false) // Distinzione Keyword SQL
-    boolean checked;
+    private boolean checked;
 
     public RateModel() {}
 
     public RateModel(
         BookModel libro,
+        UserModel utente,
         String descrizione,
         Integer voto,
         boolean checked
     ) {
         this.libro = libro;
+        this.utente = utente;
         this.descrizione = descrizione;
         this.voto = voto;
         this.checked = checked;
@@ -53,6 +58,9 @@ public class RateModel {
 
     public BookModel getLibro() { return libro; }
     public void setLibro(BookModel libro) { this.libro = libro; }
+
+    public UserModel getUtente() { return utente; }
+    public void setUtente(UserModel utente) { this.utente = utente; }
 
     public String getDescrizione() { return descrizione; }
     public void setDescrizione(String descrizione) { this.descrizione = descrizione; }

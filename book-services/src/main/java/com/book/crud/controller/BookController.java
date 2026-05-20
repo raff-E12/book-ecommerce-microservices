@@ -14,12 +14,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.book.crud.dto.Book;
 import com.book.crud.errors.DataInsertException;
 import com.book.crud.errors.InvalidDateException;
 import com.book.crud.errors.ResourceNotFoundException;
+import com.book.crud.global.SetList;
 import com.book.crud.mapper.BookMapper;
 import com.book.crud.model.*;
 import com.book.crud.services.BookServices;
@@ -148,9 +150,10 @@ public class BookController {
         Boolean isTrashed = bookFind.get().trashed();
 
         if(isTrashed){
-            maps.put("message", "Libro Gia Segnato Come Eliminato!!");
-            maps.put("status", HttpStatus.BAD_REQUEST.value());
-            return new ResponseEntity<HashMap<String, Object>>(maps, HttpStatus.BAD_REQUEST);
+            books.RestoreTrash(id);
+            maps.put("message", "Libro è Stato Riprestinato");
+            maps.put("status", HttpStatus.OK.value());
+            return new ResponseEntity<HashMap<String, Object>>(maps, HttpStatus.OK);
         }
 
         books.UpdateTrash(id);
@@ -216,10 +219,10 @@ public class BookController {
         return new ResponseEntity<HashMap<String, Object>>(maps, HttpStatus.OK);
     }
 
-    @GetMapping("/get-list-trashed")
-	public ResponseEntity<HashMap<String, Object>> FindAllNotTrashed(){
+    @PostMapping("/get-list-trashed")
+	public ResponseEntity<HashMap<String, Object>> FindAllNotTrashed(@RequestBody SetList setList){
         HashMap<String, Object> maps = new HashMap<>();
-        Boolean sets = false;
+        Boolean sets = setList.set();
         List<Book> response = books.TrashListBooks(sets);
 
         if(response.isEmpty()){

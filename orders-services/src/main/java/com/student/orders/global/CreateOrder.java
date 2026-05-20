@@ -14,6 +14,9 @@ public class CreateOrder {
     @JsonProperty("total")
     private int Total;
 
+    @JsonProperty("idUtente")
+    private int utenteId;
+
     public List<BookTableList> getShop() {
         return Shop;
     }
@@ -28,6 +31,14 @@ public class CreateOrder {
 
     public void setTotal(int Total) {
         this.Total = Total;
+    }
+
+    public int getUserID() {
+        return utenteId;
+    }
+
+    public void setUserID(int id) {
+        this.utenteId = id;
     }
 
 }
