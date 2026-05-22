@@ -2,6 +2,7 @@ package com.book.rate.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.book.rate.repository.BookRepositery;
 import com.book.rate.repository.CheckRepository;
@@ -30,39 +31,39 @@ public class RateServices {
     @Autowired
     private RatingMapping rateMapper;
 
+    @Transactional(readOnly = true)
     public Optional<Rate> getRateById(Integer id) {
         Optional<RateModel> list = rateRepositery.findById(id);
-        Optional<Rate> bookDtoOptional = list.map(rateMapper::toRate);
-        return bookDtoOptional;
+        return list.map(rateMapper::toDto);
     }
 
+    @Transactional(readOnly = true)
     public List<Rate> getBookComments(Integer bookId) {
         List<RateModel> books = rateRepositery.findByLibroId(bookId);
-        List<Rate> bookDtoOptional = books.stream().map(rateMapper::toRate).toList();
-        return bookDtoOptional;
+        return books.stream().map(rateMapper::toDto).toList();
     }
 
+    @Transactional(readOnly = true)
     public List<Rate> getUserComments(Integer userId) {
         List<RateModel> rates = rateRepositery.findByUtenteId(userId);
-        return rates.stream().map(rateMapper::toRate).toList();
+        return rates.stream().map(rateMapper::toDto).toList();
     }
 
+    @Transactional
     public Rate createComment(RateModel rateModel) {
         RateModel savedRate = rateRepositery.save(rateModel);
-        return rateMapper.toRate(savedRate);
+        return rateMapper.toDto(savedRate);
     }
 
+    @Transactional(readOnly = true)
     public List<Rate> getAllComments() {
         List<RateModel> rates = rateRepositery.findAll();
-        List<Rate> bookDtoOptional = rates.stream().map(rateMapper::toRate).toList();
-        return bookDtoOptional;
+        return rates.stream().map(rateMapper::toDto).toList();
     }
 
-    public Boolean getRateDelete(Integer id){
-        int DeleteRate = rateRepositery.deleteByIdNative(id);
-        if (DeleteRate == 0) {
-            return false;
-        }
-        return true;
+    @Transactional
+    public Boolean getRateDelete(Integer id) {
+        int deleted = rateRepositery.deleteByIdNative(id);
+        return deleted != 0;
     }
 }

@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.student.orders.components.OrderKafka;
+import com.student.orders.dto.CheckComplete;
 import com.student.orders.dto.Checkout;
 import com.student.orders.errors.IllegalResponseException;
 import com.student.orders.errors.ResourceNotFoundException;
@@ -139,6 +140,21 @@ public class OdersController {
 
         return new ResponseEntity<HashMap<String, Object>>(maps, HttpStatus.OK);
     }
-    
+
+    @GetMapping("/orders")
+    public ResponseEntity<HashMap<String, Object>> getListOrders() {
+        HashMap<String, Object> maps = new HashMap<>();
+        List<CheckComplete> list = ordersServices.orderInfoAll();
+        
+        if(list.isEmpty()){
+            throw new ResourceNotFoundException("Ordini non trovati");
+        }
+
+        maps.put("message", "Ordini trovati con successo");
+        maps.put("Orders", list);
+        maps.put("size", list.size());
+        maps.put("status", HttpStatus.OK.value());
+        return new ResponseEntity<HashMap<String, Object>>(maps, HttpStatus.OK);
+    }
 
 }

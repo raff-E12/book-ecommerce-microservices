@@ -7,12 +7,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.student.orders.components.OrderKafka;
 import com.student.orders.dto.BookTableList;
+import com.student.orders.dto.Books;
+import com.student.orders.dto.CheckComplete;
 import com.student.orders.dto.Checkout;
 import com.student.orders.errors.IllegalResponseException;
 import com.student.orders.events.OrderCheck;
@@ -21,6 +25,7 @@ import com.student.orders.events.OrderFeedback;
 import com.student.orders.global.CreateOrder;
 import com.student.orders.global.interfaces.CheckOutQuery;
 import com.student.orders.mappers.CheckoutMapper;
+import com.student.orders.mappers.OrderMapper;
 import com.student.orders.model.BooksModels;
 import com.student.orders.model.CheckOutModel;
 import com.student.orders.model.OrdersModel;
@@ -50,9 +55,14 @@ public class OrdersServices {
 
     private final OrderKafka kafkaOrders;
 
+    @Autowired
+    private OrderMapper orderMapper;
+
     // Utilizzo del Costruttore con Kafka
-    public OrdersServices(OrderKafka orderKafka){
+    public OrdersServices(OrderKafka orderKafka, OrderRepository orderRepository, OrderMapper orderMapper){
         this.kafkaOrders = orderKafka;
+        this.orderRepository = orderRepository;
+        this.orderMapper = orderMapper;
     }
 
     public List<Checkout> getAllOrders(int ordineId) {
@@ -206,6 +216,38 @@ public class OrdersServices {
     public Optional<OrdersModel> OrdersFinder(int id){
         Optional<OrdersModel> FindOrder = orderRepository.findById(id);
         return FindOrder;
+    }
+
+    @Transactional(readOnly = true)
+    public List<CheckComplete> orderInfoAll() {
+        List<OrdersModel> orders = orderRepository.findAll();
+
+        return orders.stream()
+                     .map(this::buildCheckComplete)
+                     .collect(Collectors.toList());
+    }
+
+    private CheckComplete buildCheckComplete(OrdersModel order) {
+
+        CheckComplete base = orderMapper.toCheckDto(order);
+
+        List<Books> bookList = order.getRigheCheckout().stream()
+                .map(riga -> new Books(
+                        riga.getLibro().getId(),
+                        riga.getLibro().getTitolo(),
+                        riga.getLibro().getPrezzo().doubleValue(),
+                        riga.getQuantita(),                                         
+                        riga.getLibro().getPrezzo().doubleValue() * riga.getQuantita()
+                ))
+                .collect(Collectors.toList());
+                
+        return new CheckComplete(
+                base.Id(),
+                bookList,
+                base.TotalPrice(),
+                base.User(),
+                base.Order()
+        );
     }
     
 }

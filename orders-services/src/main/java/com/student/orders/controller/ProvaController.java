@@ -28,7 +28,7 @@ public class ProvaController {
 	}
 	
 	@GetMapping("/db-test/{id}")
-	public ResponseEntity<List<Checkout>> FindAll(@PathVariable int id){
+	public ResponseEntity<List<Checkout>> FindSingle(@PathVariable int id){
         return new ResponseEntity<>(services.getAllOrders(id), HttpStatus.OK);
 	}
 
