@@ -228,12 +228,12 @@ Nel file `.env` del frontend:
 VITE_API_BASE_URL=http://localhost:8080
 ```
 
-Per i microservizi Spring Boot, la configurazione è centralizzata nel Config Server (`book-spring-config`). Ogni servizio punta al Config Server tramite `bootstrap.yml` o `application.yml`:
+Per i microservizi Spring Boot, la configurazione è centralizzata nel Config Server (`book-spring-config`). Ogni servizio punta al Config Server tramite `application.properties`:
 
-```yaml
-spring:
-  config:
-    import: optional:configserver:http://localhost:8888
+```properties
+  spring.cloud.config.discovery.enabled=true
+  spring.cloud.config.discovery.service-id=spring-config-book
+  spring.config.import=optional:configserver:http://localhost:8084
 ```
 
 ## Premessa
