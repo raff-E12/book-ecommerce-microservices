@@ -10,33 +10,33 @@ Applicazione e-commerce per la gestione di libri basata su architettura a micros
 ## 🗺️ Architettura
 
 ```
-                         ┌─────────────────────┐
-                         │   Vue 3 Frontend     │
-                         │  (vue-book-gestionale)│
-                         └────────┬────────────┘
+                         ┌────────────────────────┐
+                         │   Vue 3 Frontend       │
+                         │  (vue-book-gestionale) │
+                         └────────┬───────────────┘
                                   │ HTTP
                          ┌────────▼────────────┐
-                         │   Gateway Service    │  ← porta unica d'ingresso
-                         │   (porta 8080)       │
+                         │   Gateway Service   │  ← porta unica d'ingresso
+                         │   (porta 8089)      │
                          └────────┬────────────┘
                                   │
               ┌───────────────────┼───────────────────┐
               │                   │                   │
    ┌──────────▼──────┐  ┌─────────▼──────┐  ┌────────▼──────────┐
    │  Book Service   │  │ Orders Service │  │  Book Rating      │
-   │  (porta 8081)   │  │  (porta 8082)  │  │  Service (8083)   │
+   │  (porta 8085)   │  │  (porta 8082)  │  │  Service (8081)   │
    └─────────────────┘  └───────┬────────┘  └───────────────────┘
                                 │
-                    ┌───────────▼──────────┐
-                    │  Notification Service │  ← avviato con Docker
-                    │  Kafka + Zipkin       │
-                    └──────────────────────┘
+                    ┌───────────▼────────────┐
+                    │  Notification Service  │  ← avviato con Docker
+                    │  Kafka + Zipkin        │
+                    └────────────────────────┘
 
 Tutti i microservizi si registrano su:
 ┌─────────────────────┐        ┌──────────────────────┐
-│  Eureka Server       │        │  Config Server        │
-│ (discovery-client)  │        │ (book-spring-config)  │
-│  (porta 8761)        │        │  (porta 8888)         │
+│  Eureka Server      │        │  Config Server       │
+│ (discovery-client)  │        │ (book-spring-config) │
+│  (porta 8761)       │        │  (porta 8084)        │
 └─────────────────────┘        └──────────────────────┘
 ```
 
@@ -46,12 +46,12 @@ Tutti i microservizi si registrano su:
 
 | Servizio | Modulo | Porta | Descrizione |
 |---|---|---|---|
-| Config Server | `book-spring-config` | 8888 | Configurazione centralizzata per tutti i microservizi |
+| Config Server | `book-spring-config` | 8084 | Configurazione centralizzata per tutti i microservizi |
 | Eureka Server | `discovery-client-services` | 8761 | Service discovery e registrazione dei microservizi |
-| API Gateway | `gateway-services` | 8080 | Punto d'ingresso unico, routing verso i servizi |
-| Book Service | `book-services` | 8081 | CRUD catalogo libri |
+| API Gateway | `gateway-services` | 8089 | Punto d'ingresso unico, routing verso i servizi |
+| Book Service | `book-services` | 8085 | CRUD catalogo libri |
 | Orders Service | `orders-services` | 8082 | Gestione ordini, transazioni via Kafka |
-| Book Rating | `book-rating` | 8083 | Recensioni e valutazioni dei libri |
+| Book Rating | `book-rating` | 8081 | Recensioni e valutazioni dei libri |
 | Notification Service | `services-notification` | — | Notifiche asincronie via Kafka; avviato con **Docker** |
 
 ---
