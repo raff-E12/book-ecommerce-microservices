@@ -1,5 +1,6 @@
 package com.book.crud.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -32,4 +33,15 @@ public interface BookRepositery extends JpaRepository<BookModel, Integer>  {
     @Transactional
     @Query("UPDATE BookModel b SET b.trashed = false WHERE b.id = :id")
     void restoreById(@Param("id") Integer id);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE BookModel b SET b.Tashdate = :date WHERE b.id = :id")
+    void setTrashDateById(@Param("id") Integer id, @Param("date") LocalDate date);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE BookModel b SET b.Tashdate = null WHERE b.id = :id")
+    void setTrashDateNullById(@Param("id") Integer id);
+
 }

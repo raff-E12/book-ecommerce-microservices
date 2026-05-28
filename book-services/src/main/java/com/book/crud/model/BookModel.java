@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 // Creazione della Entità "Book" da usare con JPA con il DB
@@ -58,6 +59,9 @@ public class BookModel implements Serializable {
     // Relazione inversa: un libro può apparire in più righe di checkout
     @OneToMany(mappedBy = "libro", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<CheckOutModel> righeCheckout;
+
+    @Column(name = "trash_date")
+    private LocalDate Tashdate;
  
     // ─── Costruttori ────────────────────────────────────────────────────────
  
@@ -66,7 +70,7 @@ public class BookModel implements Serializable {
     public BookModel(String titolo, String autore, String editore,
                 Integer annoPubblicazione, String isbn, String categoria,
                 Integer numCopie, Integer disponibile, String posizioneScaffale,
-                String note, BigDecimal prezzo, String coverImg, Boolean trash) {
+                String note, BigDecimal prezzo, String coverImg, Boolean trash, LocalDate trashDate) {
         this.titolo = titolo;
         this.autore = autore;
         this.editore = editore;
@@ -80,6 +84,7 @@ public class BookModel implements Serializable {
         this.prezzo = prezzo;
         this.coverImg = coverImg;
         this.trashed = trash;
+        this.Tashdate = trashDate;
     }
  
     // ─── Getters & Setters ───────────────────────────────────────────────────
@@ -131,4 +136,7 @@ public class BookModel implements Serializable {
  
     public List<CheckOutModel> getRigheCheckout() { return righeCheckout; }
     public void setRigheCheckout(List<CheckOutModel> righeCheckout) { this.righeCheckout = righeCheckout; }
+
+    public LocalDate getTrashDate() { return Tashdate; }
+    public void setTrashDate(LocalDate date) { this.Tashdate = date; }
 }

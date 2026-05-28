@@ -1,6 +1,7 @@
 package com.book.crud.dto;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 import jakarta.persistence.Column;
 
@@ -19,5 +20,6 @@ public record Book(
     BigDecimal prezzo,
     String coverColor,
     String coverImg,
-    Boolean trashed
+    Boolean trashed,
+    LocalDate trashDate
 ) {}

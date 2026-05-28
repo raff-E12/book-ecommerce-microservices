@@ -1,6 +1,9 @@
 package com.book.crud.controller;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +24,7 @@ import com.book.crud.dto.Book;
 import com.book.crud.errors.DataInsertException;
 import com.book.crud.errors.InvalidDateException;
 import com.book.crud.errors.ResourceNotFoundException;
+import com.book.crud.global.ResponseDate;
 import com.book.crud.global.SetList;
 import com.book.crud.mapper.BookMapper;
 import com.book.crud.model.*;
@@ -44,13 +48,6 @@ public class BookController {
     
     @Autowired
     private BookMapper bookMapper;
-
-    public ResponseEntity<HashMap<String, Object>> FallBackBook(RequestNotPermitted ex) {
-        HashMap<String, Object> maps = new HashMap<>();
-        maps.put("message", "Troppe richieste, riprova tra poco");
-        maps.put("status", HttpStatus.TOO_MANY_REQUESTS.value());
-        return new ResponseEntity<>(maps, HttpStatus.TOO_MANY_REQUESTS);
-    }
 
     @GetMapping("/libri")
 	public ResponseEntity<HashMap<String, Object>> FindAll(){
@@ -144,9 +141,11 @@ public class BookController {
     }
 
     @PatchMapping("/delete-check/{id}")
-     public ResponseEntity<HashMap<String, Object>> BookDeleteCheck(@PathVariable Integer id) {
+     public ResponseEntity<HashMap<String, Object>> BookDeleteCheck(@PathVariable Integer id, @RequestBody ResponseDate DateBody) {
         HashMap<String, Object> maps = new HashMap<>();
         Optional<Book> bookFind = books.ListBookID(id);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");  // Implementazione utura di Selezione
+        LocalDate Trashdate = LocalDate.parse(DateBody.DateTrash());
         Boolean isTrashed = bookFind.get().trashed();
 
         if(isTrashed){
@@ -156,7 +155,8 @@ public class BookController {
             return new ResponseEntity<HashMap<String, Object>>(maps, HttpStatus.OK);
         }
 
-        books.UpdateTrash(id);
+        System.out.println(Trashdate);
+        books.UpdateTrash(id, Trashdate);
         maps.put("message", "Il Libro Cancellato con Successo!!");
         maps.put("status", HttpStatus.OK.value());
 

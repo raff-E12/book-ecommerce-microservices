@@ -1,5 +1,6 @@
 package com.book.crud.services;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -46,12 +47,14 @@ public class BookServices {
         books.save(book);
     }
 
-    public void UpdateTrash(int id){
+    public void UpdateTrash(int id, LocalDate date){
         books.trashById(id);
+        books.setTrashDateById(id, date);
     }
 
     public void RestoreTrash(int id){
         books.restoreById(id);
+        books.setTrashDateNullById(id);
     }
 
     public List<Book> TrashListBooks(boolean set){
