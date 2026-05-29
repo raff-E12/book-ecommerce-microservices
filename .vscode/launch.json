@@ -8,7 +8,7 @@
             "mainClass": "com.discovery.client.ClientApplication",
             "projectName": "client",
             "args": "",
-            "envFile": "${workspaceFolder}/.env",
+            "envFile": "${workspaceFolder}/.env.default",
             "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=52674 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=client"
         },
         {
@@ -19,7 +19,7 @@
             "mainClass": "com.book.crud.CrudApplication",
             "projectName": "crud",
             "args": "",
-            "envFile": "${workspaceFolder}/.env",
+            "envFile": "${workspaceFolder}/.env.default",
             "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=52954 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=crud"
         },
         {
@@ -30,7 +30,7 @@
             "mainClass": "com.services.gateway.GatewayApplication",
             "projectName": "gateway",
             "args": "",
-            "envFile": "${workspaceFolder}/.env",
+            "envFile": "${workspaceFolder}/.env.default",
             "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=58780 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=gateway"
         },
         {
@@ -41,7 +41,7 @@
             "mainClass": "com.student.orders.OrdersApplication",
             "projectName": "orders",
             "args": "",
-            "envFile": "${workspaceFolder}/.env",
+            "envFile": "${workspaceFolder}/.env.default",
             "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=59012 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=orders"
         },
         {
@@ -52,7 +52,7 @@
             "mainClass": "com.book.config.ConfigApplication",
             "projectName": "config",
             "args": "",
-            "envFile": "${workspaceFolder}/.env",
+            "envFile": "${workspaceFolder}/.env.default",
             "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=65276 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=config"
         },
         {
@@ -63,7 +63,8 @@
             "mainClass": "com.notification.services.ServicesApplication",
             "projectName": "services",
             "args": "",
-            "envFile": "${workspaceFolder}/.env"
+            "envFile": "${workspaceFolder}/.env.default",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=53500 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=services"
         },
         {
             "type": "java",
@@ -73,7 +74,7 @@
             "mainClass": "com.book.rate.RateApplication",
             "projectName": "rate",
             "args": "",
-            "envFile": "${workspaceFolder}/.env",
+            "envFile": "${workspaceFolder}/.env.default",
             "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=53444 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=rate"
         },
         {
@@ -84,7 +85,8 @@
             "mainClass": "com.users.book.BookApplication",
             "projectName": "book",
             "args": "",
-            "envFile": "${workspaceFolder}/.env"
+            "envFile": "${workspaceFolder}/.env.default",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=53500 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=services"
         }
     ]
 }
