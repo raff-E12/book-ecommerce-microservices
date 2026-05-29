@@ -116,7 +116,18 @@ Dashboard disponibile su: [http://localhost:8761](http://localhost:8761)
 
 ---
 
-### 3. Microservizi principali
+### 3. File .env
+
+Mi raccomando imposta nel fil .env l'username e la password con il Postgress in collegamento:
+
+```bash
+DB_USERNAME= XXXXXXX
+DB_PASSWORD= XXXXXXX
+```
+
+---
+
+### 4. Microservizi principali
 
 Avvia ciascuno in un terminale separato:
 
@@ -140,7 +151,7 @@ mvn spring-boot:run
 
 ---
 
-### 4. Notification Service (Docker)
+### 5. Notification Service (Docker)
 
 Il Notification Service (con Kafka consumer e Zipkin) si avvia tramite Docker Compose:
 
@@ -163,7 +174,7 @@ docker compose down
 
 ---
 
-### 5. Frontend Vue 3
+### 6. Frontend Vue 3
 
 ```bash
 cd vue-book-gestionale-frontend
