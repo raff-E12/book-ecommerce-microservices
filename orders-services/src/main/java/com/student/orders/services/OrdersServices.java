@@ -138,23 +138,33 @@ public class OrdersServices {
             CheckOutModel checkOut = new CheckOutModel();
             BooksModels bookFind = BookRepository.findAllById(prod.libro_id()).stream().findFirst().orElse(null);
     
-            checkOut.setLibro(bookFind);
-            checkOut.setOrdine(order);
-            checkOut.setLibroPrezzo(prod.libro_prezzo());
-            checkOut.setQuantita(prod.quantita());
-            checkOut.setPrezzoSubtotale(prod.prezzo_subtotale());
-            check.add(checkOut);
+            if(bookFind != null){
+                checkOut.setLibro(bookFind);
+                checkOut.setOrdine(order);
+                checkOut.setLibroPrezzo(prod.libro_prezzo());
+                checkOut.setQuantita(prod.quantita());
+                checkOut.setPrezzoSubtotale(prod.prezzo_subtotale());
 
-            kafkaOrders.sendOrderCreated(
-                new OrderCreated(
-                    bookFind.getId(),
-                    bookFind.getTitolo(),
-                    bookFind.getPrezzo(),
-                    checkOut.getQuantita(),
-                    checkOut.getPrezzoSubtotale(),
-                    FindUser.get().getId()
-                )
-            );
+                int newDisponibile = bookFind.getDisponibile() - prod.quantita();
+                int newNumCopie = bookFind.getNumCopie() - prod.quantita();
+
+                BookRepository.updateAvailability(newDisponibile, List.of(bookFind.getId()));
+                if(newNumCopie < 0) newNumCopie = 0;
+                BookRepository.updateNumCopie(newNumCopie, List.of(bookFind.getId()));
+                
+                check.add(checkOut);
+
+                kafkaOrders.sendOrderCreated(
+                    new OrderCreated(
+                        bookFind.getId(),
+                        bookFind.getTitolo(),
+                        bookFind.getPrezzo(),
+                        checkOut.getQuantita(),
+                        checkOut.getPrezzoSubtotale(),
+                        FindUser.get().getId()
+                    )
+                );
+            }
         }
 
         if (check != null && !check.isEmpty()) {
