@@ -165,11 +165,11 @@ Il tool ti guiderà in modo interattivo nella configurazione (host, utente, pass
 
 | Comando | Descrizione |
 |---|---|
-| `npm run db:init` | Modalità interattiva completa |
-| `npm run db:create` | Crea database + schema |
-| `npm run db:migrate` | Applica modifiche incrementali |
-| `npm run db:reset` | Drop e ricrea da zero |
-| `npm run db:check` | Verifica solo la connessione |
+| `npm run init` | Modalità interattiva completa |
+| `npm run create` | Crea database + schema |
+| `npm run migrate` | Applica modifiche incrementali |
+| `npm run reset` | Drop e ricrea da zero |
+| `npm run check` | Verifica solo la connessione |
 
 > Il tool esegue automaticamente un health check su PostgreSQL prima di procedere, con retry in caso il database non sia ancora pronto.
 
