@@ -55,6 +55,8 @@ async function collectionsInputs(options){
           { name: '-- Crea database + schema', value: 'create'  },
           { name: '-- Esegui migration',        value: 'migrate' },
           { name: '-- Drop e ricrea tutto',     value: 'reset'   },
+          { name: '-- Cambia SQL e ricrea tutto', value: 'change' },
+          { name: '-- Verifica Connessione al DB', value: 'check' },
         ],
       });
       
@@ -71,7 +73,7 @@ export async function gatherInput() {
         .option('--port <port>',     'Porta del database')
         .option('--user <user>',     'Utente del database')
         .option('--db <name>',       'Nome del database')
-        .option('--action <action>', 'Azione: create | migrate | reset')
+        .option('--action <action>', 'Azione: create | migrate | reset | change | check')
         .parse(process.argv);
     
      const options = program.opts();  // Elenco degli input di raccolta

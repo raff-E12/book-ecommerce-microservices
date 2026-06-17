@@ -4,6 +4,7 @@ import path from 'path';
 
 const { Client } = pg;
 
+// Connessione Client e Raccolta Query in Lista
 function parseStatments(file) {
     return file
     .split(';')
@@ -23,6 +24,7 @@ async function CreateClient(config, database) {
     return client;
 }
 
+// Lettura e Esecuzione Query Disponibili
 export async function RunQueryFile(config, filePath) {
     const resolved = path.resolve(filePath);
     
@@ -57,8 +59,9 @@ export async function RunQueryFile(config, filePath) {
       console.log(`\n--- Risultato: ${success} ok, ${failed} errori\n`);
 }
 
+// Ricreazione Database
 export async function DropAndRecreateDB(config) {
-  console.log(`\n💣 Drop e ricreazione di "${config.dbName}"...\n`);
+  console.log(`\n-- Drop e ricreazione di "${config.dbName}"...\n`);
   const client = await CreateClient(config, 'postgres');
 
   try {
@@ -79,6 +82,7 @@ export async function DropAndRecreateDB(config) {
   }
 }
 
+// Creazione Database
 export async function CreateDataBase(config) {
   const client = await CreateClient(config, 'postgres');
 
@@ -90,9 +94,9 @@ export async function CreateDataBase(config) {
 
     if (res.rowCount === 0) {
       await client.query(`CREATE DATABASE "${config.dbName}"`);
-      console.log(`  🆕 Database "${config.dbName}" creato\n`);
+      console.log(`-- Database "${config.dbName}" creato\n`);
     } else {
-      console.log(`  ℹ️  Database "${config.dbName}" già esistente, salto creazione\n`);
+      console.log(`  ℹ  Database "${config.dbName}" già esistente, salto creazione\n`);
     }
   } finally {
     await client.end();

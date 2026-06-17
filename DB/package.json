@@ -4,7 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "init": "node app.js"
+    "init": "node app.js",
+    "create": "node app.js --action create",
+    "migrate": "node app.js --action migrate",
+    "reset": "node app.js --action reset",
+    "check": "node app.js --action check",
+    "change": "node app.js --action change"
   },
   "keywords": [],
   "author": "",

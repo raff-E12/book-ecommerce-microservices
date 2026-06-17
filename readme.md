@@ -151,7 +151,31 @@ mvn spring-boot:run
 
 ---
 
-### 5. Notification Service (Docker)
+### 5. Inizializzazione Database
+
+Prima di avviare i microservizi, inizializza il database PostgreSQL con il tool CLI dedicato:
+
+```bash
+cd db-init
+npm install
+npm run db:init
+```
+
+Il tool ti guiderà in modo interattivo nella configurazione (host, utente, password, nome database) e nella scelta dell'operazione da eseguire:
+
+| Comando | Descrizione |
+|---|---|
+| `npm run db:init` | Modalità interattiva completa |
+| `npm run db:create` | Crea database + schema |
+| `npm run db:migrate` | Applica modifiche incrementali |
+| `npm run db:reset` | Drop e ricrea da zero |
+| `npm run db:check` | Verifica solo la connessione |
+
+> Il tool esegue automaticamente un health check su PostgreSQL prima di procedere, con retry in caso il database non sia ancora pronto.
+
+---
+
+### 6. Notification Service (Docker)
 
 Il Notification Service (con Kafka consumer e Zipkin) si avvia tramite Docker Compose:
 
@@ -174,7 +198,7 @@ docker compose down
 
 ---
 
-### 6. Frontend Vue 3
+### 7. Frontend Vue 3
 
 ```bash
 cd vue-book-gestionale-frontend
@@ -213,9 +237,10 @@ book-ecommerce-microservices/
 ├── discovery-client-services/   # Eureka Server
 ├── gateway-services/            # API Gateway
 ├── book-services/               # Microservizio Libri
-├── orders-services/             # Microservizio Ordini
-├── book-rating/                 # Microservizio Recensioni
-└── services-notification/       # Notification Service (Docker)
+├── orders-services/              # Microservizio Ordini
+├── book-rating/                  # Microservizio Recensioni
+├── db-init/                       # Tool CLI inizializzazione DB
+└── services-notification/        # Notification Service (Docker)
     └── docker-compose.yml
 ```
 
