@@ -239,7 +239,7 @@ book-ecommerce-microservices/
 ├── book-services/               # Microservizio Libri
 ├── orders-services/              # Microservizio Ordini
 ├── book-rating/                  # Microservizio Recensioni
-├── db-init/                       # Tool CLI inizializzazione DB
+├── DB/                       # Tool CLI inizializzazione DB
 └── services-notification/        # Notification Service (Docker)
     └── docker-compose.yml
 ```
